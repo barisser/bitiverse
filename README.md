@@ -17,25 +17,43 @@ that are the senders.
 
 ###Publish Contents in your pixel space
 - Create a content instructions file.  Put it on the web somewhere.  Call that url the CONTENT_URL.
+    - To create a valid content file run the following code, content_file_name can be anything:
+      ```
+      import python
+      import content
+      content.create_content_file(image_url, link_url, content_file_name)
+      ```
+    - Post this file on the web, its url is the CONTENT URL.
+
 - Pick an image of the appropriate dimensions to go in your pixelspace.  Call its url the IMAGE URL.
+
 - Pick a destination url that your pixel space links to, eg, "my-sweet-blog.com".
+  If someone clicks on your designated pixelspace, they will be linked to that URL.
+
 - Create and broadcast a 'publishing' transaction.  This creates a 'content pointer' in the blockchain
 that others will use to populate your part of the pixelspace.  Note that this can be created at
 any time.  But it will only be in effect when the pixels are properly owned by the publishing address.
-  >> python
-  >> import pixelwriter as p
-  >> from_address = "YOUR PUBLISHING BITCOIN ADDRESS THAT OWNS PIXELSPACE"
-  >> coords_set = [[40, 600], [90, 670]] # THE Coordinates of the edge points of a rectangle.  
-      Within this rectangle any pixels that you also own will be populated according to the
-      instructions of your content-pointer.  The published image in the content instructions file
-      will be STRETCHED to the dimensions of this rectangle, even if you do not own all pixels.
-      It will not be written onto non-owned pixels of course.
-  >> avoid_inputs = ['txhash1', 'txhash2'] # TXHASHES that you do not want sent in a publishing transaction.
-    This only pertains to specially marked ownership outputs which should not be used in a publishing
-    transaction.  XXX TODO come up with a cleaner/easier solution for this.
-  >> private_key = "THE PRIVATE KEY OF THE OWNER ADDRESS"
-  >> p.content_tx(from_address, coords_set, content_url, private_key, avoid_inputs=[], push=True):
+```
+>> python
+import pixelwriter as p
+from_address = "YOUR PUBLISHING BITCOIN ADDRESS THAT OWNS PIXELSPACE"
 
+coords_set = [[40, 600], [90, 670]]
+# THE Coordinates of the edge points of a rectangle.  
+Within this rectangle any pixels that you also own will be populated according to the
+instructions of your content-pointer.  The published image in the content instructions file
+will be STRETCHED to the dimensions of this rectangle, even if you do not own all pixels.
+It will not be written onto non-owned pixels of course.
+
+avoid_inputs = ['txhash1', 'txhash2']
+# TXHASHES that you do not want sent in a publishing transaction.
+  This only pertains to specially marked ownership outputs which should not be used in a publishing
+  transaction.  XXX TODO come up with a cleaner/easier solution for this.
+
+private_key = "THE PRIVATE KEY OF THE OWNER ADDRESS"
+
+p.content_tx(from_address, coords_set, content_url, private_key, avoid_inputs=[], push=True)
+```
 
 
 
