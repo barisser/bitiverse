@@ -2,18 +2,27 @@
 
 ###Build the Bitiverse from Scratch
 python generator.py
+A /site folder will be created.  Click the index.html file inside.
 
 ###Transfer a pixel space to a Bitcoin address
+```
 >> python
->> import pixelwriter as p
->> from_address = "YOUR SENDING BITCOIN ADDRESS THAT ALREADY OWNS PIXELS"
->> coords_set = [[100, 200], [150, 250]] # the edge coords of the rectangle within which you transfer pixels that you already own
->> destination = "SOME RECEIVING BITCOIN ADDRESS"
->> private_key = "The Sender's private key"
->> predecessor_inputs = {'output': 'TXHASH:TXINDEX', value: '900'} # UNSPENT OUTPUTS THAT OWN PIXELS
-that are the senders.
->> p.write_transfer_tx(from_address, coords_set, destination, private_key,
+import pixelwriter as p
+
+from_address = "YOUR SENDING BITCOIN ADDRESS THAT ALREADY OWNS PIXELS"
+
+# the edge coords of the rectangle within which you transfer pixels that you already own
+coords_set = [[100, 200], [150, 250]]
+
+destination = "SOME RECEIVING BITCOIN ADDRESS"
+private_key = "The Sender's private key"
+
+# UNSPENT OUTPUTS THAT OWN PIXELS
+predecessor_inputs = {'output': 'TXHASH:TXINDEX', value: '900'}
+
+p.write_transfer_tx(from_address, coords_set, destination, private_key,
                       predecessor_inputs, push=True, sign=True):
+```
 
 ###Publish Contents in your pixel space
 - Create a content instructions file.  Put it on the web somewhere.  Call that url the CONTENT_URL.
