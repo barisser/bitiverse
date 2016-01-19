@@ -1,0 +1,11 @@
+*.pyc
+deployer.py
+keys.txt
+test.py
+*.csv
+owners.txt
+ownerlist.txt
+*.json
+site/*
+.DS_Store
+*.jpg
