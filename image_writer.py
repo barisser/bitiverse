@@ -15,8 +15,10 @@ def resize_image(image, new_resolution):
 
 def apply_image_on_image(pimage, image, coords, owners, applier_output):
     pix = pimage.load()
-    for i in range(coords[0][0], min(coords[1][0]+1, p.universe_width)):
-        for j in range(coords[0][1], min(coords[1][1]+1, p.universe_height)):
+    xmax = image.size[0] - 1
+    ymax = image.size[1] - 1
+    for i in range(coords[0][0], min(coords[1][0] + 1, xmax)):
+        for j in range(coords[0][1], min(coords[1][1] + 1, ymax)):
             if owners[i][j] == applier_output:
                 try:
                     pc = pix[i, j]
