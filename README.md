@@ -2,7 +2,7 @@
 
 ###Build the Bitiverse from Scratch
 python generator.py
-A /site folder will be created.  Click the index.html file inside.
+A /static folder will be created.  Click the index.html file inside.
 
 ###Transfer a pixel space to a Bitcoin address
 ```

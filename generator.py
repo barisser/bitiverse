@@ -61,7 +61,7 @@ def get_links_array(owners, ownerlist):
     return links_array, keylist
 
 def write_html(owners, ownerlist):
-    f = open('site/index.html', 'wb')
+    f = open('static/index.html', 'wb')
     html = skeleton1
     linksarray, keylist = get_links_array(owners, ownerlist)
 
@@ -73,13 +73,13 @@ def write_html(owners, ownerlist):
     f.close()
 
 def make():
-    os.system('rm -rf site')
-    os.system('mkdir -p site')
-    os.system('touch site/index.html')
+    os.system('rm -rf static')
+    os.system('mkdir -p static')
+    os.system('touch static/index.html')
 
     owners, ownerlist = o.process_all()
     print "creating image"
-    i.create_and_save_image('site/bitiverse.jpg', owners, ownerlist)
+    i.create_and_save_image('static/bitiverse.jpg', owners, ownerlist)
     write_html(owners, ownerlist)
 
 if __name__ == "__main__":
