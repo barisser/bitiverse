@@ -13,6 +13,16 @@ def load_image(filename):
 def resize_image(image, new_resolution):
     return image.resize(new_resolution, Image.ANTIALIAS)
 
+def create_link_map(output_filename, linkarray):
+    image = Image.new("RGB", (p.universe_width, p.universe_height), "white")
+    for n, x in enumerate(linkarray):
+        for m, y in enumerate(x):
+            y = int(y)
+            c = (y * 50 % 255, y * 30 % 255, y * 130 % 255)
+            image.putpixel((n, m), c)
+        print n
+    image.save(output_filename)
+
 def apply_image_on_image(pimage, image, coords, owners, applier_output):
     pix = pimage.load()
     xmax = image.size[0] - 1

@@ -155,10 +155,7 @@ def read_content_txs_for_owner(output):  #NEED TO CHECK ONLY TXS COMING AFTER OU
         coords, url = read_content_tx(txhash)
 
         if not coords is None:
-            print "FOUND CONTENT "
-            print coords
-            print url
-            print ''
+            print "Found Content within coords: " + str(coords) + " pointing to " + str(url)
             d.append([coords, url, block_height])
     return d
 

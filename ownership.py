@@ -6,6 +6,9 @@ import reader as r
 root_output = {'output': "ea3995f87974c34d8fde332e0194a42ae80d07713c1b36b85869eb4516b48c93:0", 'value': 98000}
 block_height = 388085
 
+grid_filename = 'grid.csv'
+owners_filename = 'owners.txt'
+
 def init_ownership():  # these data structures are horrible and need to be replaced with trees
     og = root_output['output']
     ownerlist = {}
@@ -15,23 +18,25 @@ def init_ownership():  # these data structures are horrible and need to be repla
     return data, ownerlist
 
 def load_ownership():
-    with open('owners.csv', 'r') as f:
+    with open(grid_filename, 'r') as f:
         data = list(list(rec) for rec in csv.reader(f, delimiter=','))
     ownerlist = []
-    with open('owners.txt') as q:
+    with open(owners_filename) as q:
         r = q.readlines()
     ownerlist = {}
     for x in r:
         outp = x.split('=')[0]
         v = int(x.split('=')[1])
         ownerlist[outp] = v
+    if len(data) < p.universe_width:
+        data, ownerlist = init_ownership()
     return data, ownerlist
 
 def save_ownership(owners, ownerlist):
-    with open("owners.csv", "wb") as f:
+    with open(grid_filename, "wb+") as f:
         writer = csv.writer(f)
         writer.writerows(owners)
-    r = open("owners.txt", "wb")
+    r = open(owners_filename, "wb+")
     for x in ownerlist:
         r.write(str(x)+"="+str(ownerlist[x])+"\n")
     r.close()
@@ -108,4 +113,4 @@ def read_transfer(txhash, data, inputs_array, owners, ownerlist):
     owners, ownerlist = adjust_ownership(owners, coords, recipient, inputs_array, ownerlist, change_recipient)
     return owners, ownerlist
 
-owners, ownerlist = init_ownership()
+#owners, ownerlist = init_ownership()

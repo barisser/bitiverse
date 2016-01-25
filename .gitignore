@@ -9,3 +9,4 @@ ownerlist.txt
 site/*
 .DS_Store
 *.jpg
+*.db
