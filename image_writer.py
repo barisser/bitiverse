@@ -2,13 +2,15 @@ from PIL import Image
 import pixelwriter as p
 import reader as r
 
-def init_image(output_filename):
-    image = Image("RGB", (p.universe_width, p.universe_height), "white")
+def create_link_map(output_filename, linksarray):
+    image = Image.new("RGB", (p.universe_width, p.universe_height), "white")
+    for n, x in enumerate(linksarray):
+        for m, y in enumerate(x):
+            y = int(y)
+            c = (y * 50 % 255, y * 30 % 255, y * 100 * 255, 120)
+            image.putpixel((n, m), c)
+        print n
     image.save(output_filename)
-
-def load_image(filename):
-    image = Image.load(filename)
-    return image
 
 def resize_image(image, new_resolution):
     return image.resize(new_resolution, Image.ANTIALIAS)
