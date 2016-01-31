@@ -18,10 +18,10 @@ def init_ownership():  # these data structures are horrible and need to be repla
     return data, ownerlist
 
 def load_ownership():
-    with open(grid_filename, 'wb+') as f:
+    with open(grid_filename, 'r') as f:
         data = list(list(rec) for rec in csv.reader(f, delimiter=','))
     ownerlist = []
-    with open(owners_filename, 'wb+') as q:
+    with open(owners_filename, 'r') as q:
         r = q.readlines()
     ownerlist = {}
     for x in r:

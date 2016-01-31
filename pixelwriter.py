@@ -1,5 +1,7 @@
 import requests
 import messaging
+import ownership as o
+import reader as r
 
 requests.packages.urllib3.disable_warnings()
 
@@ -39,6 +41,24 @@ def decompress_coords(n):
 def transfer_message(coords_set):
     return str(compress_coords(coords_set))
 
+def get_safe_unspents(address, ownerlist):
+    txs = r.get_address_txs(address)
+    unsafe = ownerlist.keys()
+    outputs = []
+    for tx in txs:
+        for output in tx['out']:
+            if not output['spent'] and output['value'] > 0 and output['addr'] == address:
+                h = str(tx['hash']) + str(":") + str(output['n'])
+                if h in unsafe:
+                    print str(h) + " is not a safe output to spend"
+                else:
+                    v = output['value']
+                    q = {}
+                    q['value'] = v
+                    q['output'] = h
+                    outputs.append(q)
+    return q
+
 def write_transfer_tx(from_address, coords_set, destination, private_key,
                       predecessor_inputs, push=False, fee=messaging.default_fee, sign=True):
     message = transfer_message(coords_set)
@@ -71,11 +91,11 @@ def content_message(coords_set, content_url):
     assert len(d) <= OP_RETURN_MAX_LENGTH
     return d
 
-def content_tx(from_address, coords_set, content_url, private_key, avoid_inputs=[], push=False):
+def content_tx(from_address, coords_set, content_url, private_key, ownerlist, push=False, fee=messaging.default_fee):
     message = content_message(coords_set, content_url)
-    inputs = [x for x in messaging.unspents(from_address) if not x['output'] in avoid_inputs]
+    inputs = [x for x in messaging.unspents(from_address) if not x['output'] in ownerlist.keys()]
     destination = from_address
-    tx = messaging.make_unsigned_op_return_tx_with_specific_inputs(from_address, destination, message, inputs)
+    tx = messaging.make_unsigned_op_return_tx_with_specific_inputs(from_address, destination, message, inputs, fee=fee)
     tx = messaging.sign_tx(tx, private_key)
     if push:
         txhash = messaging.pushtx(tx)
