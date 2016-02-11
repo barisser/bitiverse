@@ -119,17 +119,16 @@ def read_tx(txhash, tx_data=None):
 def read_content_tx(txhash, tx_data=None):
     message_data = read_tx(txhash, tx_data)
     message = message_data[0]
-    try:
+    print message
+    if len(message) > 0:
         if message[0] == "C": #is a content tx
-            coords = int(message.split('/')[1])
+            coords = message.split('/')[1]
             coords = p.decompress_coords(coords)
             q = message.split('/')
             url = '/'.join(q[2:len(q)])
             return coords, url
         else:
             return None, None
-    except:
-        return None, None
 
 def get_address_txs(address):
     url = "https://blockchain.info/address/{0}?format=json".format(address)

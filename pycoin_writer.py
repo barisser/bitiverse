@@ -6,7 +6,6 @@ from binascii import hexlify
 from pycoin.serialize import b2h_rev
 import messaging as m
 
-
 def spendable_to_legible(spendable):
     return b2h_rev(spendable.previous_hash) + ":" + str(spendable.previous_index)
 

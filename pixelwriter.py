@@ -1,5 +1,7 @@
 import requests
 import messaging
+import pycoin_writer
+import cointools as c
 import ownership as o
 import reader as r
 
@@ -17,9 +19,11 @@ def compress_coords(coords_set):
         for y in x:
             n += y * m
             m = m * (universe_width)
+    n = c.base58encode(n)
     return n
 
 def decompress_coords(n):
+    n = c.base58decode(n)
     d = []
     odd = True
     r = []
@@ -87,16 +91,23 @@ def write_transfer_tx(from_address, coords_set, destination, private_key,
         return tx
 
 def content_message(coords_set, content_url):
-    d = "C/"+str(compress_coords(coords_set)) + "/" + str(content_url)
+    d = "C/"+str(compress_coords(coords_set)) + '/' + str(content_url)
+    #d = "a" * 35
+    #d = "C/"# + str(content_url)
     assert len(d) <= OP_RETURN_MAX_LENGTH
     return d
 
-def content_tx(from_address, coords_set, content_url, private_key, ownerlist, push=False, fee=messaging.default_fee):
+def content_tx(from_address, coords_set, content_url, private_key, ownerlist, push=False, fee=messaging.default_fee, sign=True):
     message = content_message(coords_set, content_url)
-    inputs = [x for x in messaging.unspents(from_address) if not x['output'] in ownerlist.keys()]
+    print message
+    print len(message)
+    assert len(message) <= OP_RETURN_MAX_LENGTH
     destination = from_address
-    tx = messaging.make_unsigned_op_return_tx_with_specific_inputs(from_address, destination, message, inputs, fee=fee)
-    tx = messaging.sign_tx(tx, private_key)
+    #tx = messaging.make_unsigned_op_return_tx_with_specific_inputs(from_address, destination, message, inputs, fee=fee)
+    tx = pycoin_writer.write_opreturn(from_address, private_key, message, \
+        bitcoin_fee=fee, avoid_inputs=ownerlist.keys())
+    #if sign:
+    #    tx = messaging.sign_tx(tx, private_key)
     if push:
         txhash = messaging.pushtx(tx)
         return txhash

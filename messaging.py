@@ -3,7 +3,7 @@ import pybitcointools
 import requests
 
 dust = 601
-default_fee = 5000
+default_fee = 10000
 
 def make_raw_transaction_from_specific_inputs_arrays(fromaddress, \
     amounts_array, destinations_array, unspents, fee=default_fee):
@@ -102,7 +102,6 @@ def add_op_return(unsigned_raw_tx, message):
     return reserialized_tx
 
 def sign_tx(unsigned_raw_tx, privatekey):
-
     tx = unsigned_raw_tx
     detx = pybitcointools.deserialize(tx)
     input_length = len(detx['ins'])
