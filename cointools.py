@@ -3,6 +3,7 @@ import ecdsa
 import ecdsa.der
 import ecdsa.util
 import bitcoin
+import pycoin
 
 b58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 subkey_complexity = 32
@@ -78,8 +79,7 @@ def keyToAddr(s):
 
 def generate_privatekey(text):
     secret_exponent = hashlib.sha256(text).hexdigest()
-    privkey = bitcoin.privateKeyToWif(secret_exponent)
-    return privkey
+    #pycoin.key.Key(secret_exponent=)
 
 def generate_publicaddress(text):
     secret_exponent = hashlib.sha256(text).hexdigest()

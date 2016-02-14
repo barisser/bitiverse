@@ -120,15 +120,20 @@ def read_content_tx(txhash, tx_data=None):
     message_data = read_tx(txhash, tx_data)
     message = message_data[0]
     print message
-    if len(message) > 0:
-        if message[0] == "C": #is a content tx
-            coords = message.split('/')[1]
-            coords = p.decompress_coords(coords)
-            q = message.split('/')
-            url = '/'.join(q[2:len(q)])
-            return coords, url
-        else:
-            return None, None
+    if not message is None:
+        if len(message) > 0:
+            if message[0] == "C": #is a content tx
+                coords = message.split('/')[1]
+                print "COORDS"
+                print coords
+                coords = p.decompress_coords(coords)
+                q = message.split('/')
+                url = '/'.join(q[2:len(q)])
+                return coords, url
+            else:
+                return None, None
+    else:
+        return None, None
 
 def get_address_txs(address):
     url = "https://blockchain.info/address/{0}?format=json".format(address)
@@ -151,6 +156,7 @@ def read_content_txs_for_owner(output):  #NEED TO CHECK ONLY TXS COMING AFTER OU
     for tx in address_txs:
         txhash = tx['hash']
         block_height = tx['block_height']
+        print txhash
         coords, url = read_content_tx(txhash)
 
         if not coords is None:

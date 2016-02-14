@@ -3,8 +3,7 @@ import pixelwriter as p
 import reader as r
 
 #initial conditions
-root_output = {'output': "ea3995f87974c34d8fde332e0194a42ae80d07713c1b36b85869eb4516b48c93:0", 'value': 98000}
-block_height = 388085
+root_output = {'output': '625af0a83d184f6c93df6201dc0b753b630191c24c29e1207e9ca6794606121e:0', 'value': 2030000}
 
 grid_filename = 'grid.csv'
 owners_filename = 'owners.txt'
@@ -18,11 +17,13 @@ def init_ownership():  # these data structures are horrible and need to be repla
     return data, ownerlist
 
 def load_ownership():
-    with open(grid_filename, 'r') as f:
+    with open(grid_filename, 'a+') as f:
         data = list(list(rec) for rec in csv.reader(f, delimiter=','))
     ownerlist = []
-    with open(owners_filename, 'r') as q:
+    with open(owners_filename, 'a+') as q:
         r = q.readlines()
+        if len(r) == 0:
+            r = [root_output['output']+"=0"]
     ownerlist = {}
     for x in r:
         outp = x.split('=')[0]

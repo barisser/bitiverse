@@ -27,7 +27,7 @@ skeleton2 = """
 function get_url(coords) {
     var x = coords[0]
     var y = coords[1]
-    var linkn = links[x*1920 + y]
+    var linkn = links[y*1920 + x]
     var url = keylist[linkn]
     console.log(linkn, url)
     return url

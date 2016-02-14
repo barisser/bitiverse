@@ -19,26 +19,26 @@ def compress_coords(coords_set):
         for y in x:
             n += y * m
             m = m * (universe_width)
-    n = c.base58encode(n)
+    n = n#c.base58encode(n)
     return n
 
 def decompress_coords(n):
-    n = c.base58decode(n)
+    n = int(c.base58decode(n), 16)
     d = []
     odd = True
-    r = []
+    rr = []
     while n > 0:
         a = n % (universe_width)
         n = n - a
         n = n / (universe_width)
         if odd:
-            r = [a]
+            rr = [a]
             odd = False
         else:
-            r.append(a)
-            d.append(r)
+            rr.append(a)
+            d.append(rr)
             odd = True
-            r = []
+            rr = []
     assert len(d) % 2 == 0
     return d
 

@@ -42,6 +42,7 @@ def apply_owner_content(owner_content, image, owners, applier_output):
     for x in owner_content:
         pimage = x['image']
         coords = x['coords']
+        print "COORDS "+str(coords)
         image = apply_image_on_image(pimage, image, coords, owners, applier_output)
     return image
 

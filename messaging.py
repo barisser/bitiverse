@@ -5,6 +5,8 @@ import requests
 dust = 601
 default_fee = 10000
 
+#Parts of this file are deprecated in favor of pycoin.
+
 def make_raw_transaction_from_specific_inputs_arrays(fromaddress, \
     amounts_array, destinations_array, unspents, fee=default_fee):
     ins = []
