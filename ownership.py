@@ -113,5 +113,3 @@ def read_transfer(txhash, data, inputs_array, owners, ownerlist):
     change_recipient = txhash + ":1" #second output should always receive change
     owners, ownerlist = adjust_ownership(owners, coords, recipient, inputs_array, ownerlist, change_recipient)
     return owners, ownerlist
-
-#owners, ownerlist = init_ownership()
