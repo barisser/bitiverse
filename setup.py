@@ -7,4 +7,8 @@ setup(name='bitiverse',
       author='Andrew Barisser',
       license='MIT',
       packages=['bitiverse'],
+      install_requires=[
+        'bitcoin',
+        'pycoin'
+      ],
       zip_safe=False)
