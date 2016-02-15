@@ -9,6 +9,8 @@ setup(name='bitiverse',
       packages=['bitiverse'],
       install_requires=[
         'bitcoin',
-        'pycoin'
+        'pycoin',
+        'Pillow',
+        'requests'
       ],
       zip_safe=False)
