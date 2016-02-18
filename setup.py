@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='bitiverse',
-      version='0.1.1',
+      version='0.1.3',
       description='A Decentralized Web Page',
       url='www.bitiverse.com',
       author='Andrew Barisser',

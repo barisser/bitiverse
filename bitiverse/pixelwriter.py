@@ -80,7 +80,7 @@ def content_tx(from_address, coords_set, content_url, private_key, ownerlist, pu
     assert len(message) <= OP_RETURN_MAX_LENGTH
     destination = from_address
     tx = pycoin_writer.write_opreturn(from_address, private_key, message, \
-        bitcoin_fee=fee, avoid_inputs=ownerlist.keys())
+        fee=fee, avoid_inputs=ownerlist.keys())
     if push:
         txhash = messaging.pushtx(tx)
         return txhash

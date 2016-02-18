@@ -33,6 +33,8 @@ def write_transfer(sender, sender_priv, recipient, message, fee=m.default_fee, a
         sign_tx(tx, wifs=[sender_priv])
         print tx.as_hex()
         return tx.as_hex()
+    else:
+        print "INADEQUATE FUNDS"
 
 def write_opreturn(bitcoin_address, bitcoin_private_key, raw_message, \
     fee=m.default_fee, avoid_inputs=[]):
@@ -57,3 +59,5 @@ def write_opreturn(bitcoin_address, bitcoin_private_key, raw_message, \
         sign_tx(tx, wifs=[bitcoin_private_key])
         print tx.as_hex()
         return tx.as_hex()
+    else:
+        print "INADEQUATE FUNDS"

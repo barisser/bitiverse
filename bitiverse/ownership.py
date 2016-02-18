@@ -111,7 +111,7 @@ def read_transfer(txhash, data, inputs_array, owners, ownerlist):
     if valid.
     Implicit Rules ====> First output is transferred, second is change (in pixelspace)
     """
-    coords = p.decompress_coords(int(data))
+    coords = p.decompress_coords(data)
 
     assert len(coords) == 2
     recipient = txhash + ":0"  #receiver should always be first output
