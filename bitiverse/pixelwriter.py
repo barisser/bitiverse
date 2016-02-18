@@ -62,19 +62,24 @@ def get_safe_unspents(address, ownerlist):
                     outputs.append(q)
     return q
 
-def write_transfer_tx(sender, coords_set, recipient, sender_priv, fee=messaging.default_fee, sign=True):
+def transfer(sender, coords_set, recipient, sender_priv, fee=messaging.default_fee, sign=True, push=False):
     message = transfer_message(coords_set)
-
     tx = pycoin_writer.write_transfer(sender, sender_priv, recipient, message, fee=fee, avoid_inputs=[])
-    return tx
+    if push:
+        txhash = messaging.pushtx(tx)
+        return txhash
+    else:
+        return tx
 
 def content_message(coords_set, content_url):
     d = "C/"+str(compress_coords(coords_set)) + '/' + str(content_url)
     assert len(d) <= OP_RETURN_MAX_LENGTH
     return d
 
-def content_tx(from_address, coords_set, content_url, private_key, ownerlist, push=False, fee=messaging.default_fee):
+def publish(from_address, coords_set, content_url, private_key, ownerlist=None, push=False, fee=messaging.default_fee):
     message = content_message(coords_set, content_url)
+    if ownerlist == None:
+        _, ownerlist = o.process_all() #TODO avoid having to do this.
     print message
     print len(message)
     assert len(message) <= OP_RETURN_MAX_LENGTH

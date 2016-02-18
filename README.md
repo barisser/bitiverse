@@ -1,70 +1,40 @@
 ##Getting Started
 
-###Build the Bitiverse from Scratch
-python generator.py
-A /static folder will be created.  Click the index.html file inside.
-
-###Transfer a pixel space to a Bitcoin address
+###Generate the Bitiverse Web Page.
 ```
->> python
-import pixelwriter as p
+import bitiverse.generator as g
 
-from_address = "YOUR SENDING BITCOIN ADDRESS THAT ALREADY OWNS PIXELS"
+g.make()  # this creates the page from the blockchain in a /static folder.
+```
+###Transfer Pixelspace
+```
+import bitiverse.pixelwriter as p
+sender = 'a bitcoin address that owns pixelspace'
+coords_set = [[300, 400], [500, 800]] # a pair of (x,y) coordinates representing far corners of a box
+                                      # anything the sender owns will be transferred.  
+                                      # Ownership need not perfectly match rectangle.
+recipient = 'a bitcoin address receiving pixelspace'
+sender_priv = 'the private key of the sender'
+fee = 'a bitcoin transaction fee in Satoshi'
 
-# the edge coords of the rectangle within which you transfer pixels that you already own
-coords_set = [[100, 200], [150, 250]]
+# if push = False the raw tx hex is returned instead of the hash
 
-destination = "SOME RECEIVING BITCOIN ADDRESS"
-private_key = "The Sender's private key"
-
-# UNSPENT OUTPUTS THAT OWN PIXELS
-predecessor_inputs = {'output': 'TXHASH:TXINDEX', value: '900'}
-
-p.write_transfer_tx(from_address, coords_set, destination, private_key,
-                      predecessor_inputs, push=True, sign=True):
+txhash = p.transfer(sender, coords_set, recipient, sender_priv, fee=15000, push=True)
 ```
 
-###Publish Contents in your pixel space
-- Create a content instructions file.  Put it on the web somewhere.  Call that url the CONTENT_URL.
-    - To create a valid content file run the following code, content_file_name can be anything:
-      ```
-      import python
-      import content
-      content.create_content_file(image_url, link_url, content_file_name)
-      ```
-    - Post this file on the web, its url is the CONTENT URL.
-
-- Pick an image of the appropriate dimensions to go in your pixelspace.  Call its url the IMAGE URL.
-
-- Pick a destination url that your pixel space links to, eg, "my-sweet-blog.com".
-  If someone clicks on your designated pixelspace, they will be linked to that URL.
-
-- Create and broadcast a 'publishing' transaction.  This creates a 'content pointer' in the blockchain
-that others will use to populate your part of the pixelspace.  Note that this can be created at
-any time.  But it will only be in effect when the pixels are properly owned by the publishing address.
+###Publish content within a Pixelspace
 ```
->> python
-import pixelwriter as p
-from_address = "YOUR PUBLISHING BITCOIN ADDRESS THAT OWNS PIXELSPACE"
-
-coords_set = [[40, 600], [90, 670]]
-# THE Coordinates of the edge points of a rectangle.  
-Within this rectangle any pixels that you also own will be populated according to the
-instructions of your content-pointer.  The published image in the content instructions file
-will be STRETCHED to the dimensions of this rectangle, even if you do not own all pixels.
-It will not be written onto non-owned pixels of course.
-
-avoid_inputs = ['txhash1', 'txhash2']
-# TXHASHES that you do not want sent in a publishing transaction.
-  This only pertains to specially marked ownership outputs which should not be used in a publishing
-  transaction.  XXX TODO come up with a cleaner/easier solution for this.
-
-private_key = "THE PRIVATE KEY OF THE OWNER ADDRESS"
-
-p.content_tx(from_address, coords_set, content_url, private_key, avoid_inputs=[], push=True)
+import bitiverse.pixelwriter as p
+from_address = 'a bitcoin address owning pixelspace within the coordinates_set'
+coords_set = [[300, 400], [500, 800]] # a pair of xy coordinates representing far corners of a box
+                                      # image will be stretched to these dimensions regardless of actual ownership
+                                      # non-owned sections within box will not be affected (of course).
+content_url = 'some url here' #this url should be created via content.py.  This describes the content of the pixelspace.
+private_key = 'private key of publishing address'
+# is push = False the raw tx hex is returned instead of the txhash
+# the fee is in Satoshi.
+txhash = p.publish(from_address, coords_set, content_url, private_key, push=True, fee=15000)
 ```
-
-
 
 ##Description
 
