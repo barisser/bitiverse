@@ -18,7 +18,7 @@ def compress_coords(coords_set):
         for y in x:
             n += y * m
             m = m * (universe_width)
-    n = n#c.base58encode(n)
+    n = c.base58encode(n)
     return n
 
 def decompress_coords(n):
@@ -64,6 +64,7 @@ def get_safe_unspents(address, ownerlist):
 
 def write_transfer_tx(sender, coords_set, recipient, sender_priv, fee=messaging.default_fee, sign=True):
     message = transfer_message(coords_set)
+
     tx = pycoin_writer.write_transfer(sender, sender_priv, recipient, message, fee=fee, avoid_inputs=[])
     return tx
 

@@ -16,15 +16,15 @@ def write_transfer(sender, sender_priv, recipient, message, fee=m.default_fee, a
     bitcoin_sum = sum([spendable.coin_value for spendable in spendables])
     inputs = [spendable.tx_in() for spendable in spendables]
     outputs = []
-    if bitcoin_sum > fee + 601*2:
-        remaining = bitcoin_sum - fee - 601*2
+    if bitcoin_sum > fee + m.dust*2:
+        remaining = bitcoin_sum - fee - m.dust*2
         dest_output_script = standard_tx_out_script(recipient)
         change_output_script = standard_tx_out_script(sender)
         btc_change_output_script = standard_tx_out_script(sender)
         op_return_output_script = script.tools.compile("OP_RETURN %s" % message)
 
-        outputs.append(TxOut(601, dest_output_script))
-        outputs.append(TxOut(601, change_output_script))
+        outputs.append(TxOut(m.dust, dest_output_script))
+        outputs.append(TxOut(m.dust, change_output_script))
         outputs.append(TxOut(remaining, btc_change_output_script))
         outputs.append(TxOut(0, op_return_output_script))
 

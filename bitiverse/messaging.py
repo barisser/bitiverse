@@ -2,7 +2,7 @@ import json
 import pybitcointools
 import requests
 
-dust = 601
+dust = 2731
 default_fee = 10000
 
 #Parts of this file are deprecated in favor of pycoin.

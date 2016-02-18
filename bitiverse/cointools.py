@@ -68,15 +68,3 @@ def pair(complexity=512):
     pub = pybitcointools.privtopub(priv)
     addr = pybitcointools.pubtoaddr(pub)
     return priv, pub, addr
-#
-# def privateKeyToPublicKey(s):
-#     sk = ecdsa.SigningKey.from_string(s.decode('hex'), curve=ecdsa.SECP256k1)
-#     return ('\04' + sk.verifying_key.to_string()).encode('hex')
-#
-# def pubKeyToAddr(s):
-#     ripemd160 = hashlib.new('ripemd160')
-#     ripemd160.update(hashlib.sha256(s.decode('hex')).digest())
-#     return base58CheckEncode(0, ripemd160.digest())
-#
-# def keyToAddr(s):
-#     return pubtoaddr(privtopub(s))
