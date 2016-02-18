@@ -1,9 +1,6 @@
 import hashlib
-import ecdsa
-import ecdsa.der
-import ecdsa.util
-import bitcoin
-import pycoin
+import pybitcointools
+import os
 
 b58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 subkey_complexity = 32
@@ -65,14 +62,21 @@ def base58CheckEncode(version, payload):
 def privateKeyToWif(key_hex):
     return base58CheckEncode(0x80, key_hex.decode('hex'))
 
-def privateKeyToPublicKey(s):
-    sk = ecdsa.SigningKey.from_string(s.decode('hex'), curve=ecdsa.SECP256k1)
-    return ('\04' + sk.verifying_key.to_string()).encode('hex')
-
-def pubKeyToAddr(s):
-    ripemd160 = hashlib.new('ripemd160')
-    ripemd160.update(hashlib.sha256(s.decode('hex')).digest())
-    return base58CheckEncode(0, ripemd160.digest())
-
-def keyToAddr(s):
-    return pubKeyToAddr(privateKeyToPublicKey(s))
+def pair(complexity=512):
+    se = hashlib.sha256(os.urandom(complexity)).hexdigest()
+    priv = privateKeyToWif(se)
+    pub = pybitcointools.privtopub(priv)
+    addr = pybitcointools.pubtoaddr(pub)
+    return priv, pub, addr
+#
+# def privateKeyToPublicKey(s):
+#     sk = ecdsa.SigningKey.from_string(s.decode('hex'), curve=ecdsa.SECP256k1)
+#     return ('\04' + sk.verifying_key.to_string()).encode('hex')
+#
+# def pubKeyToAddr(s):
+#     ripemd160 = hashlib.new('ripemd160')
+#     ripemd160.update(hashlib.sha256(s.decode('hex')).digest())
+#     return base58CheckEncode(0, ripemd160.digest())
+#
+# def keyToAddr(s):
+#     return pubtoaddr(privtopub(s))

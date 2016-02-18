@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='bitiverse',
-      version='0.1',
+      version='0.1.1',
       description='A Decentralized Web Page',
       url='www.bitiverse.com',
       author='Andrew Barisser',
@@ -11,6 +11,8 @@ setup(name='bitiverse',
         'bitcoin',
         'pycoin',
         'Pillow',
-        'requests'
+        'requests',
+        'pybitcointools',
+        'ecdsa'
       ],
       zip_safe=False)

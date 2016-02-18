@@ -9,18 +9,43 @@ import messaging as m
 def spendable_to_legible(spendable):
     return b2h_rev(spendable.previous_hash) + ":" + str(spendable.previous_index)
 
+def write_transfer(sender, sender_priv, recipient, message, fee=m.default_fee, avoid_inputs=[]):
+    message = hexlify(message.encode()).decode('utf8')
+    spendables = spendables_for_address(sender)
+    spendables = [s for s in spendables if not spendable_to_legible(s.tx_in()) in avoid_inputs]
+    bitcoin_sum = sum([spendable.coin_value for spendable in spendables])
+    inputs = [spendable.tx_in() for spendable in spendables]
+    outputs = []
+    if bitcoin_sum > fee + 601*2:
+        remaining = bitcoin_sum - fee - 601*2
+        dest_output_script = standard_tx_out_script(recipient)
+        change_output_script = standard_tx_out_script(sender)
+        btc_change_output_script = standard_tx_out_script(sender)
+        op_return_output_script = script.tools.compile("OP_RETURN %s" % message)
+
+        outputs.append(TxOut(601, dest_output_script))
+        outputs.append(TxOut(601, change_output_script))
+        outputs.append(TxOut(remaining, btc_change_output_script))
+        outputs.append(TxOut(0, op_return_output_script))
+
+        tx = Tx(version=1, txs_in=inputs, txs_out=outputs)
+        tx.set_unspents(spendables)
+        sign_tx(tx, wifs=[sender_priv])
+        print tx.as_hex()
+        return tx.as_hex()
+
 def write_opreturn(bitcoin_address, bitcoin_private_key, raw_message, \
-    bitcoin_fee=m.default_fee, avoid_inputs=[]):
+    fee=m.default_fee, avoid_inputs=[]):
     message = hexlify(raw_message.encode()).decode('utf8')
     spendables = spendables_for_address(bitcoin_address)
     spendables = [s for s in spendables if not spendable_to_legible(s.tx_in()) in avoid_inputs]
     bitcoin_sum = sum([spendable.coin_value for spendable in spendables])
     inputs = [spendable.tx_in() for spendable in spendables]
     outputs = []
-    if (bitcoin_sum > bitcoin_fee):
+    if (bitcoin_sum > fee):
         change_output_script = standard_tx_out_script(bitcoin_address)
         print change_output_script
-        outputs.append(TxOut(bitcoin_sum - bitcoin_fee, change_output_script))
+        outputs.append(TxOut(bitcoin_sum - fee, change_output_script))
 
         ## Build the OP_RETURN output with our message
         op_return_output_script = script.tools.compile("OP_RETURN %s" % message)
