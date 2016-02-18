@@ -1,5 +1,10 @@
 ##Getting Started
 
+###
+```
+pip install bitiverse
+```
+
 ###Generate the Bitiverse Web Page.
 ```
 import bitiverse.generator as g
