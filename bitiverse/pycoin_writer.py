@@ -6,8 +6,10 @@ from binascii import hexlify
 from pycoin.serialize import b2h_rev
 import messaging as m
 
+
 def spendable_to_legible(spendable):
     return b2h_rev(spendable.previous_hash) + ":" + str(spendable.previous_index)
+
 
 def write_transfer(sender, sender_priv, recipient, message, fee=m.default_fee, avoid_inputs=[]):
     message = hexlify(message.encode()).decode('utf8')
@@ -35,6 +37,7 @@ def write_transfer(sender, sender_priv, recipient, message, fee=m.default_fee, a
         return tx.as_hex()
     else:
         print "INADEQUATE FUNDS"
+
 
 def write_opreturn(bitcoin_address, bitcoin_private_key, raw_message, \
     fee=m.default_fee, avoid_inputs=[]):
