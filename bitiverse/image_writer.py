@@ -2,16 +2,20 @@ from PIL import Image
 import pixelwriter as p
 import reader as r
 
+
 def init_image(output_filename):
     image = Image("RGB", (p.universe_width, p.universe_height), "white")
     image.save(output_filename)
+
 
 def load_image(filename):
     image = Image.load(filename)
     return image
 
+
 def resize_image(image, new_resolution):
     return image.resize(new_resolution, Image.ANTIALIAS)
+
 
 def create_link_map(output_filename, linkarray):
     image = Image.new("RGB", (p.universe_width, p.universe_height), "white")
@@ -22,6 +26,7 @@ def create_link_map(output_filename, linkarray):
             image.putpixel((n, m), c)
         print n
     image.save(output_filename)
+
 
 def apply_image_on_image(pimage, image, coords, owners, applier_output):
     pix = pimage.load()
@@ -38,6 +43,7 @@ def apply_image_on_image(pimage, image, coords, owners, applier_output):
                 image.putpixel((i, j), pc)
     return image
 
+
 def apply_owner_content(owner_content, image, owners, applier_output):
     for x in owner_content:
         pimage = x['image']
@@ -45,6 +51,7 @@ def apply_owner_content(owner_content, image, owners, applier_output):
         print "COORDS "+str(coords)
         image = apply_image_on_image(pimage, image, coords, owners, applier_output)
     return image
+
 
 def create_image(owners, ownerlist):
     image = Image.new("RGB", (p.universe_width, p.universe_height), "white")
@@ -54,6 +61,7 @@ def create_image(owners, ownerlist):
         owner_content = owners_contents[owner]
         image = apply_owner_content(owner_content, image, owners, owner)
     return image
+
 
 def apply_owner_links(owner_content, links, owners, owner, l):
     for x in owner_content:
@@ -70,6 +78,7 @@ def apply_owner_links(owner_content, links, owners, owner, l):
                     print 'out of bounds coords in link assignment'
     return links, l
 
+
 def create_links_array(owners, ownerlist):
     contents = r.owners_contents(ownerlist)
     links = []
@@ -84,6 +93,7 @@ def create_links_array(owners, ownerlist):
         owner_content = contents[owner]
         links, l = apply_owner_links(owner_content, links, owners, owner, l)
     return links, l
+
 
 def create_and_save_links_array(owners, ownerlist, filename, keylist_filename):
     links, l = create_links_array(owners, ownerlist)
@@ -101,6 +111,7 @@ def create_and_save_links_array(owners, ownerlist, filename, keylist_filename):
         f2.write('\n')
     f2.close()
 
+
 def load_links_array(filename, keylist_filename):
     f = open(filename)
     q = f.readlines()
@@ -117,9 +128,11 @@ def load_links_array(filename, keylist_filename):
 
     return a, keys
 
+
 def create_and_save_image(filename, owners, ownerlist):
     image = create_image(owners, ownerlist)
     image.save(filename)
+
 
 def image_to_grid(image_obj):
     data = list(image_obj.getdata())
