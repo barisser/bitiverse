@@ -50,6 +50,8 @@ function moduleCoords(x, y) {
 }
 </script>
 """
+
+
 def get_links_array(owners, ownerlist):
     links, l = i.create_links_array(owners, ownerlist)
     links_array = "["
@@ -59,6 +61,7 @@ def get_links_array(owners, ownerlist):
     links_array = links_array[0:len(links_array) - 4] + "]"
     keylist = str([str(x[1]) for x in l.items()])
     return links_array, keylist
+
 
 def write_html(owners, ownerlist):
     f = open('static/index.html', 'wb')
@@ -71,6 +74,7 @@ def write_html(owners, ownerlist):
     html += skeleton2
     f.write(html)
     f.close()
+
 
 def make():
     os.system('rm -rf static')
