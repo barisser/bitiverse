@@ -11,6 +11,7 @@ universe_width = 1920
 universe_height = 1080
 OP_RETURN_MAX_LENGTH = 80
 
+
 def compress_coords(coords_set):
     n = 0
     m = 1
@@ -20,6 +21,7 @@ def compress_coords(coords_set):
             m = m * (universe_width)
     n = c.base58encode(n)
     return n
+
 
 def decompress_coords(n):
     n = int(c.base58decode(n), 16)
@@ -41,8 +43,10 @@ def decompress_coords(n):
     assert len(d) % 2 == 0
     return d
 
+
 def transfer_message(coords_set):
     return str(compress_coords(coords_set))
+
 
 def get_safe_unspents(address, ownerlist):
     txs = r.get_address_txs(address)
@@ -62,6 +66,7 @@ def get_safe_unspents(address, ownerlist):
                     outputs.append(q)
     return q
 
+
 def transfer(sender, coords_set, recipient, sender_priv, fee=messaging.default_fee, sign=True, push=False):
     message = transfer_message(coords_set)
     tx = pycoin_writer.write_transfer(sender, sender_priv, recipient, message, fee=fee, avoid_inputs=[])
@@ -71,10 +76,12 @@ def transfer(sender, coords_set, recipient, sender_priv, fee=messaging.default_f
     else:
         return tx
 
+
 def content_message(coords_set, content_url):
     d = "C/"+str(compress_coords(coords_set)) + '/' + str(content_url)
     assert len(d) <= OP_RETURN_MAX_LENGTH
     return d
+
 
 def publish(from_address, coords_set, content_url, private_key, ownerlist=None, push=False, fee=messaging.default_fee):
     message = content_message(coords_set, content_url)
