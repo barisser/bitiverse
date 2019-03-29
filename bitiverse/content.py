@@ -2,6 +2,7 @@ import json
 
 version = 0.1
 
+
 def create_content_file(image_url, link_url, content_file_name):
     data = {}
     data['image_url'] = image_url
