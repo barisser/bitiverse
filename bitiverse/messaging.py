@@ -58,7 +58,7 @@ def make_raw_transaction_from_specific_inputs(fromaddress, amount, \
 
         extra = totalin-amount-fee
         if extra >= dust:
-            outs.append({'value':extra, 'address':fromaddress})
+            outs.append({'value': extra, 'address': fromaddress})
         tx = pybitcointools.mktx(ins, outs)
         return tx
     else:
