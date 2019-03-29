@@ -8,6 +8,7 @@ root_output = {'output': '625af0a83d184f6c93df6201dc0b753b630191c24c29e1207e9ca6
 grid_filename = 'grid.csv'
 owners_filename = 'owners.txt'
 
+
 def init_ownership():
     og = root_output['output']
     ownerlist = {}
@@ -15,6 +16,7 @@ def init_ownership():
     data = [[og for _ in range(0, p.universe_height)] for _ in range(0, p.universe_width)]
     save_ownership(data, ownerlist)
     return data, ownerlist
+
 
 def load_ownership():
     with open(grid_filename, 'a+') as f:
@@ -33,6 +35,7 @@ def load_ownership():
         data, ownerlist = init_ownership()
     return data, ownerlist
 
+
 def save_ownership(owners, ownerlist):
     with open(grid_filename, "wb+") as f:
         writer = csv.writer(f)
@@ -41,6 +44,7 @@ def save_ownership(owners, ownerlist):
     for x in ownerlist:
         r.write(str(x)+"="+str(ownerlist[x])+"\n")
     r.close()
+
 
 def process_all():
     owners, ownerlist = load_ownership()
@@ -51,6 +55,7 @@ def process_all():
             cont = False
     save_ownership(owners, ownerlist)
     return owners, ownerlist
+
 
 def process(owners, ownerlist):
     iterations = 0
@@ -66,11 +71,13 @@ def process(owners, ownerlist):
             owners, ownerlist = read(next_output, owners, ownerlist)
     return owners, ownerlist, iterations
 
+
 def read(txhash, owners, ownerlist):
     data, _, inputs_array = r.read_tx(txhash)
     if len(data) > 2 and not data[0] == "C":
         owners, ownerlist = read_transfer(txhash, data, inputs_array, owners, ownerlist)
     return owners, ownerlist
+
 
 def adjust_ownership(owners, coords, new_owner, inputs_array, ownerlist, change_recipient):
     """
@@ -104,6 +111,7 @@ def adjust_ownership(owners, coords, new_owner, inputs_array, ownerlist, change_
             del ownerlist[x]
 
     return owners, ownerlist
+
 
 def read_transfer(txhash, data, inputs_array, owners, ownerlist):
     """

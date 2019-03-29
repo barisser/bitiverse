@@ -7,6 +7,7 @@ default_fee = 10000
 
 #Parts of this file are deprecated in favor of pycoin.
 
+
 def make_raw_transaction_from_specific_inputs_arrays(fromaddress, \
     amounts_array, destinations_array, unspents, fee=default_fee):
     ins = []
@@ -30,6 +31,7 @@ def make_raw_transaction_from_specific_inputs_arrays(fromaddress, \
 
         return tx
 
+
 def unspents(address):
     url = "https://bitcoin.toshi.io/api/v0/addresses/{0}/unspent_outputs".format(address)
     r = requests.get(url)
@@ -41,6 +43,7 @@ def unspents(address):
         a['output'] = unspent['transaction_hash'] + ":" + str(unspent['output_index'])
         u.append(a)
     return u
+
 
 def make_raw_transaction_from_specific_inputs(fromaddress, amount, \
     destination, unspents, fee=default_fee):
@@ -64,19 +67,23 @@ def make_raw_transaction_from_specific_inputs(fromaddress, amount, \
     else:
         print "INSUFFICIENT BITCOIN"
 
+
 def make_tx(from_address, amount, destination, private_key, sign=True):
     tx = make_raw_transaction(from_address, amount, destination)
     if sign:
         tx = sign_tx(tx, private_key)
     return tx
 
+
 def send(from_address, amount, destination, private_key):
     tx = make_tx(from_address, amount, destination, private_key)
     return pushtx(tx)
 
+
 def make_raw_transaction(fromaddress, amount, destination):#ALL AMOUNTS IN SATOSHI
     unspent_outputs = unspents(fromaddress)
     return make_raw_transaction_from_specific_inputs(fromaddress, amount, destination, unspent_outputs)
+
 
 def make_op_return_script(message):
     hex_message = message.encode('hex')
@@ -91,6 +98,7 @@ def make_op_return_script(message):
             b = '6a' + f + hex_message
             return b
 
+
 def add_op_return(unsigned_raw_tx, message):
     deserialized_tx = pybitcointools.deserialize(unsigned_raw_tx)
     newscript = make_op_return_script(message)
@@ -103,6 +111,7 @@ def add_op_return(unsigned_raw_tx, message):
     reserialized_tx = pybitcointools.serialize(deserialized_tx)
     return reserialized_tx
 
+
 def sign_tx(unsigned_raw_tx, privatekey):
     tx = unsigned_raw_tx
     detx = pybitcointools.deserialize(tx)
@@ -111,6 +120,7 @@ def sign_tx(unsigned_raw_tx, privatekey):
     for i in range(0, input_length):
         tx = pybitcointools.sign(tx, i, privatekey)
     return tx
+
 
 def pushtx_blockexplorer(rawtx):
     url = "https://blockexplorer.com/api/tx/send"
@@ -126,6 +136,7 @@ def pushtx_blockexplorer(rawtx):
         return str(jsonresponse['txid'])
     else:
         return "None"
+
 
 def pushtx(rawtx):
     url = "http://btc.blockr.io/api/v1/tx/push"
@@ -143,6 +154,7 @@ def pushtx(rawtx):
     else:
         return str(pushtx_blockexplorer(rawtx))
 
+
 def make_op_return_tx(fromaddress, private_key, destination, message, push=True):
     amount = 0
     tx = make_raw_transaction(fromaddress, amount, destination)
@@ -154,11 +166,13 @@ def make_op_return_tx(fromaddress, private_key, destination, message, push=True)
     else:
         return tx
 
+
 def make_unsigned_op_return_tx(fromaddress, destination, message):
     amount = 0
     tx = make_raw_transaction(fromaddress, amount, destination)
     tx = add_op_return(tx, message)
     return tx
+
 
 def make_unsigned_op_return_tx_with_specific_inputs(fromaddress, destination,\
     message, specific_inputs, fee=default_fee):
@@ -166,6 +180,7 @@ def make_unsigned_op_return_tx_with_specific_inputs(fromaddress, destination,\
     tx = make_raw_transaction_from_specific_inputs(fromaddress, amount, destination, specific_inputs, fee=fee)
     tx = add_op_return(tx, message)
     return tx
+
 
 def donate_and_send_message(fromaddress, destination, message, helper_address, helper_priv_key):
     helper_amount = default_fee

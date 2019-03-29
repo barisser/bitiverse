@@ -7,6 +7,7 @@ import pixelwriter as p
 
 requests.packages.urllib3.disable_warnings()
 
+
 def get_block(block_height):
     blocks = json.loads(requests.get("https://blockchain.info/block-height/" + \
         str(block_height)+"?format=json").content)
@@ -14,15 +15,18 @@ def get_block(block_height):
         if block['main_chain']:
             return block
 
+
 def txs_in_block(block_height):
     txs_data = requests.get("https://bitcoin.toshi.io/api/v0/blocks/{0}/transactions".\
         format(block_height)).content
     return json.loads(txs_data)['transactions']
 
+
 def get_tx_toshi(txhash):
     url = "https://bitcoin.toshi.io/api/v0/transactions/{0}".format(txhash)
     tx_data = json.loads(requests.get(url).content)
     return tx_data
+
 
 def get_tx_blockcypher(txhash):
     tries = 10
@@ -42,10 +46,12 @@ def get_tx_blockcypher(txhash):
             time.sleep(interval)
     return tx_data
 
+
 def get_address_txs_toshi(address):
     txs = json.loads(requests.get("https://bitcoin.toshi.io/api/v0/addresses/\
         {0}/transactions".format(address)).content)
     return txs
+
 
 def where_was_output_spent(txhash, output_n):
     tx_data = get_tx_blockcypher(txhash)
@@ -55,10 +61,12 @@ def where_was_output_spent(txhash, output_n):
                 return tx_data['outputs'][output_n]['spent_by']
     return None
 
+
 def get_raw_tx(txhash):
     rawtx = requests.get("https://blockchain.info/rawtx/{0}?format=hex".\
         format(txhash)).content
     return rawtx
+
 
 def get_tx(txhash):
     success = False
@@ -76,6 +84,7 @@ def get_tx(txhash):
         success = True
     return rawtx
 
+
 def tx_info(txhash):
     success = False
     n = 0
@@ -92,6 +101,7 @@ def tx_info(txhash):
             success = False
             time.sleep(interval)
     return d
+
 
 def read_tx(txhash, tx_data=None):
     if tx_data is None:
@@ -116,6 +126,7 @@ def read_tx(txhash, tx_data=None):
 
     return message, recipients, inputs
 
+
 def read_content_tx(txhash, tx_data=None):
     message_data = read_tx(txhash, tx_data)
     message = message_data[0]
@@ -135,10 +146,12 @@ def read_content_tx(txhash, tx_data=None):
     else:
         return None, None
 
+
 def get_address_txs(address):
     url = "https://blockchain.info/address/{0}?format=json".format(address)
     txs_data = requests.get(url).content
     return json.loads(txs_data)['txs']
+
 
 def recipient_of_output(output):
     txhash = output.split(':')[0]
@@ -146,6 +159,7 @@ def recipient_of_output(output):
     tx2 = get_tx_toshi(txhash)
     tx = tx_info(txhash)
     return tx['vout'][output_n]['scriptPubKey']['addresses'][0], tx2['block_height']
+
 
 def read_content_txs_for_owner(output):  #NEED TO CHECK ONLY TXS COMING AFTER OUTPUT OCCURRED
     address, block_height = recipient_of_output(output)
@@ -164,6 +178,7 @@ def read_content_txs_for_owner(output):  #NEED TO CHECK ONLY TXS COMING AFTER OU
             d.append([coords, url, block_height])
     return d
 
+
 def extract_contents(content_url):
     try:
         data = json.loads(requests.get(content_url).content)
@@ -174,8 +189,10 @@ def extract_contents(content_url):
         print "CANNOT EXTRACT CONTENTS FROM " + str(content_url)
         return None, None
 
+
 def relevant_data(content_data):
     return content_data
+
 
 def read_contents(owner_output):
     data = read_content_txs_for_owner(owner_output)
@@ -193,10 +210,12 @@ def read_contents(owner_output):
         d.append(q)
     return d
 
+
 def retrieve_image(image_url):
     c = requests.get(image_url).content
     d = StringIO.StringIO(c)
     return Image.open(d)
+
 
 def owners_contents(ownerlist):
     data = {}
